@@ -8,7 +8,7 @@
   </div>
 </template>
 <script setup lang="tsx">
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 import { Right } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus';
 import gif from '@/assets/640.gif'

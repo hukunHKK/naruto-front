@@ -1,0 +1,1 @@
+import{_ as t,r as o,o as c,c as _,a as s,w as a,b as n}from"./index-ff5b1675.js";const r={},d={class:"home-wrapper center"};function p(i,l){const e=o("RouterLink");return c(),_("div",d,[s(e,{to:"/healthy-website"},{default:a(()=>[n("你懂的")]),_:1})])}const m=t(r,[["render",p],["__scopeId","data-v-d0c3bfe1"]]);export{m as default};

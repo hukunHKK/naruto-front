@@ -33,7 +33,6 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import ALink from '_c/ALink.vue'
 import { getWebsite } from '_a/shareWebsite'
 import { FormInstance, FormRules } from 'element-plus';
