@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { ref } from 'vue';
+const locale = ref(zhCn)
 </script>
 
 <template>
-  <h1>
-    你好，屌毛。
-  </h1>
+  <el-config-provider :locale="locale">
+    <div class="app-wrapper">
+      <router-view></router-view>
+    </div>
+  </el-config-provider>
 </template>
 
 <style scoped>
+.app-wrapper {
+  width: 100vw;
+  height: 100vh;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
