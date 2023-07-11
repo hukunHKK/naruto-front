@@ -6,10 +6,12 @@
 <style scoped>
 .home-wrapper {
   text-align: center;
+  height: 100%;
 }
 
 .center {
   display: flex;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
 }
 </style>

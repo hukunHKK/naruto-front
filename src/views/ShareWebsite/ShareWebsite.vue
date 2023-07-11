@@ -14,7 +14,9 @@
     <el-dialog v-model="dialogFormVisible" :show-close="false" width="90%">
       <el-form :model="form" :rules="rules" :label-width="60" ref="ruleFormRef">
         <el-form-item label="网站" prop="website">
-          <el-input v-model="form.website" autocomplete="off" />
+          <el-input v-model="form.website" autocomplete="off">
+            <template #prepend>Http://</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" autocomplete="off" />

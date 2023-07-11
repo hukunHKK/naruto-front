@@ -2,7 +2,7 @@
   <div class="center">
     <el-input v-model="userName" placeholder="请输入你的大名">
       <template #append>
-        <el-button :icon="Right" @click="login" />
+        <el-button :icon="Right" @click="handlelogin" />
       </template>
     </el-input>
   </div>
@@ -12,10 +12,27 @@ import { ref } from 'vue';
 import { Right } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus';
 import gif from '@/assets/640.gif'
+import { login } from '_a/login'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const userName = ref('')
-const login = () => {
-  showGif()
+const handlelogin = async () => {
+  if (userName.value === '') {
+    showGif()
+    return
+  }
+  const res = await login({ name: userName.value })
+  if (res.code === 1) {
+    localStorage.setItem('userInfo', JSON.stringify({ name: userName.value }))
+    router.push('/')
+  } else {
+    ElMessage({
+      duration: 5000,
+      message: '这是哪个沙雕',
+      type: 'error'
+    })
+  }
 }
 const showGif = () => {
   ElMessage({
