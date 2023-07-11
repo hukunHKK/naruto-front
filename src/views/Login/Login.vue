@@ -22,7 +22,7 @@ const handlelogin = async () => {
     showGif()
     return
   }
-  const res = await login({ name: userName.value })
+  const res: any = await login({ name: userName.value })
   if (res.code === 1) {
     localStorage.setItem('userInfo', JSON.stringify({ name: userName.value }))
     router.push('/')
