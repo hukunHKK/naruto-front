@@ -14,6 +14,9 @@ import { ElMessage } from 'element-plus';
 import gif from '@/assets/640.gif'
 import { login } from '_a/login'
 import { useRouter } from 'vue-router'
+import { useUser } from '@/store/user'
+
+const { setUserInfo } = useUser()
 const router = useRouter()
 
 const userName = ref('')
@@ -24,7 +27,7 @@ const handlelogin = async () => {
   }
   const res: any = await login({ name: userName.value })
   if (res.code === 1) {
-    localStorage.setItem('userInfo', JSON.stringify({ name: userName.value }))
+    setUserInfo({ name: userName.value })
     router.push('/')
   } else {
     ElMessage({

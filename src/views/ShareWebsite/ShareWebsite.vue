@@ -6,7 +6,18 @@
     <el-table :data="tableData" border>
       <el-table-column prop="website" label="网站">
         <template #default="{ row }">
-          <ALink :url="row.website"></ALink>
+          <ALink :url="row.protocol + row.website"></ALink>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createUser" label="老司机" width="100">
+        <template #default="{ row }">
+          <el-popconfirm v-if="userInfo.name === row.createUser || userInfo.name === '胡坤'" confirm-button-text="Y"
+            cancel-button-text="N" title="确定要删除该网站吗?" @confirm="confirmDel(row.id)">
+            <template #reference>
+              <span>{{ row.createUser }}</span>
+            </template>
+          </el-popconfirm>
+          <span v-else>{{ row.createUser }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="100"></el-table-column>
@@ -15,7 +26,12 @@
       <el-form :model="form" :rules="rules" :label-width="60" ref="ruleFormRef">
         <el-form-item label="网站" prop="website">
           <el-input v-model="form.website" autocomplete="off">
-            <template #prepend>Http://</template>
+            <template #prepend>
+              <el-select v-model="form.protocol" placeholder="Select" style="width: 115px">
+                <el-option label="http://" value="http://" />
+                <el-option label="https://" value="https://" />
+              </el-select>
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -36,10 +52,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ALink from '_c/ALink.vue'
-import { getWebsite } from '_a/shareWebsite'
-import { FormInstance, FormRules } from 'element-plus';
-console.log(123);
+import { getWebsite, addWebsite, delWebsite } from '_a/shareWebsite'
+import { FormInstance, FormRules, ElMessage } from 'element-plus';
+import { useUser } from '@/store/user'
 
+const { userInfo } = useUser()
 const tableData = ref([])
 const getData = async () => {
   const res = await getWebsite()
@@ -49,22 +66,59 @@ getData()
 
 const dialogFormVisible = ref(false)
 const rules = ref<FormRules>({
-  website: [{ required: true, trigger: 'blur', message: '网站都不填？' }],
+  website: [
+    { required: true, trigger: 'blur', message: `${userInfo.name}你网站都不填？` },
+    {
+      validator: (_rule: any, value: any, callback: any) => {
+        if (value.includes('.')) {
+          callback()
+        } else {
+          callback(new Error(`这是网站？拒绝白嫖，从${userInfo.name}做起`))
+        }
+      }, trigger: 'blur'
+    },
+  ],
 })
 const ruleFormRef = ref<FormInstance | null>(null)
 const form = ref({
   website: '',
-  remark: ''
+  remark: '',
+  protocol: 'https://',
+  createUser: userInfo.name
 })
 const submit = () => {
-  ruleFormRef.value!.validate((valid) => {
+  ruleFormRef.value!.validate(async (valid) => {
     if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!')
-      return false
+      const res: any = await addWebsite(form.value)
+      if (res.code === 1) {
+        ElMessage({
+          duration: 5000,
+          message: '感谢老板分享',
+          type: 'success'
+        })
+        getData()
+        dialogFormVisible.value = false
+      } else {
+        ElMessage({
+          duration: 5000,
+          message: res.message,
+          type: 'error'
+        })
+      }
     }
   })
+}
+const confirmDel = async (id) => {
+  const res: any = delWebsite({ id })
+  if (res.code === 0) {
+    ElMessage({
+      duration: 5000,
+      message: res.message,
+      type: 'error'
+    })
+  } else {
+    getData()
+  }
 }
 </script>
 <style scoped>

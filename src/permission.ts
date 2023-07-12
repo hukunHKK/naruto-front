@@ -1,7 +1,8 @@
 import { NavigationGuardWithThis } from 'vue-router'
+import { useUser } from './store/user'
 
-const userInfo = localStorage.getItem('userInfo')
 const guard: NavigationGuardWithThis<undefined> = (to, _from, next) => {
+  const { userInfo } = useUser()
   if (!userInfo) {
     if (to.name === 'login') {
       next()
