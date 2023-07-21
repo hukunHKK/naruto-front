@@ -32,7 +32,7 @@ const handlelogin = async () => {
   } else {
     ElMessage({
       duration: 5000,
-      message: '这是哪个沙雕',
+      message: res.message,
       type: 'error'
     })
   }
