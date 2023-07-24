@@ -1,17 +1,28 @@
 import { defineStore } from 'pinia'
+import { encrypt, decrypt } from '@/utils/crypto'
+
+const getInfo = () => {
+  try {
+    return JSON.parse(decrypt(localStorage.getItem('userInfo')))
+  } catch (error) {
+    return null
+  }
+}
+const userInfo = getInfo()
 
 export const useUser = defineStore('user', {
   state() {
     return {
-      userName: ''
+      userInfo
     }
   },
   getters: {
-    userInfo: () => JSON.parse(localStorage.getItem('userInfo')!)
+
   },
   actions: {
     setUserInfo(info) {
-      localStorage.setItem('userInfo', JSON.stringify(info))
+      this.userInfo = info
+      localStorage.setItem('userInfo', encrypt(JSON.stringify(info)))
     }
   }
 })

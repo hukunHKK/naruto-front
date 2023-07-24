@@ -10,7 +10,11 @@ const guard: NavigationGuardWithThis<undefined> = (to, _from, next) => {
       next('/login')
     }
   } else {
-    next()
+    if (to.name === 'login') {
+      next('/')
+    } else {
+      next()
+    }
   }
 }
 export default guard
