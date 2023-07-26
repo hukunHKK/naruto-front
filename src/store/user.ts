@@ -34,6 +34,11 @@ export const useUser = defineStore('user', {
       this.userInfo = decrypt(info)
       this.authorization = info
       localStorage.setItem('userInfo', info)
+    },
+    rmUserInfo() {
+      this.userInfo = null
+      this.authorization = null
+      localStorage.removeItem('userInfo')
     }
   }
 })
