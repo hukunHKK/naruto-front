@@ -15,7 +15,7 @@ import { ElMessage } from 'element-plus';
 import gif from '@/assets/640.gif'
 import { login, loginCode } from '_a/login'
 import { useRouter } from 'vue-router'
-import { useUser } from '@/store/user'
+import { useIsMobile, useUser } from '@/store'
 
 const { setUserInfo } = useUser()
 const router = useRouter()
@@ -29,9 +29,14 @@ const handlelogin = async () => {
     return
   }
   isLogining.value = true
-  const res: any = await login({ name: userName.value })
+  const res: any = await login({ name: userName.value, phone: useIsMobile().isMobile })
   isLogining.value = false
   if (res.code === 1) {
+    if (res.message === '登录成功') {
+      setUserInfo(res.data)
+      router.push('/')
+      return
+    }
     showCode.value = true
   } else {
     ElMessage({
@@ -49,7 +54,7 @@ const handleloginFinally = async () => {
       showGif()
       return
     }
-    const res: any = await loginCode({ name: userName.value, code: code.value })
+    const res: any = await loginCode({ name: userName.value, code: code.value, phone: useIsMobile().isMobile })
     if (res.code === 1) {
       setUserInfo({ name: userName.value })
       router.push('/')

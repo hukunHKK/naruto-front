@@ -6,12 +6,12 @@
     <el-table :data="tableData" border>
       <el-table-column prop="website" label="网站">
         <template #default="{ row }">
-          <ALink :url="row.protocol + row.website"></ALink>
+          <ALink :url="row.website" @click="clickWebsite(row.website)"></ALink>
         </template>
       </el-table-column>
       <el-table-column prop="createUser" label="老司机" width="100">
         <template #default="{ row }">
-          <el-popconfirm v-if="userInfo.name === row.createUser || userInfo.name === '胡坤'" confirm-button-text="Y"
+          <el-popconfirm v-if="userInfo.name === row.createUser || userInfo.role === 'admin'" confirm-button-text="Y"
             cancel-button-text="N" title="确定要删除该网站吗?" @confirm="confirmDel(row.id)">
             <template #reference>
               <span>{{ row.createUser }}</span>
@@ -26,12 +26,12 @@
       <el-form :model="form" :rules="rules" :label-width="60" ref="ruleFormRef">
         <el-form-item label="网站" prop="website">
           <el-input v-model="form.website" autocomplete="off">
-            <template #prepend>
+            <!-- <template #prepend>
               <el-select v-model="form.protocol" placeholder="Select" style="width: 115px">
                 <el-option label="http://" value="http://" />
                 <el-option label="https://" value="https://" />
               </el-select>
-            </template>
+            </template> -->
           </el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -52,14 +52,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ALink from '_c/ALink.vue'
-import { getWebsite, addWebsite, delWebsite } from '_a/shareWebsite'
+import { getWebsite, addWebsite, delWebsite, addRecord } from '_a/shareWebsite'
 import { FormInstance, FormRules, ElMessage } from 'element-plus';
-import { useUser } from '@/store/user'
+import { useUser, useIsMobile } from '@/store'
 
 const { userInfo } = useUser()
+
 const tableData = ref([])
 const getData = async () => {
-  const res = await getWebsite()
+  const res: any = await getWebsite()
+  if (res.code === 0) {
+    ElMessage({
+      message: res.message,
+      type: 'error'
+    })
+  }
   tableData.value = res.data
 }
 getData()
@@ -119,6 +126,13 @@ const confirmDel = async (id) => {
   } else {
     getData()
   }
+}
+const clickWebsite = (website) => {
+  addRecord({
+    website,
+    user: userInfo.name,
+    phone: useIsMobile().isMobile
+  })
 }
 </script>
 <style scoped>

@@ -12,7 +12,10 @@ let CBCOptions = {
 }
 let key = CryptoJS.enc.Utf8.parse(AesKey);
 // 加密
-export function encrypt(data) {
+export function encrypt(data, isJson = true) {
+  if (isJson) {
+    data = JSON.stringify(data)
+  }
   let secretData = CryptoJS.enc.Utf8.parse(data);
   let encrypted = CryptoJS.AES.encrypt(
     secretData,
@@ -23,6 +26,10 @@ export function encrypt(data) {
 }
 
 // 解密
-export function decrypt(data) {
-  return CryptoJS.AES.decrypt(data, key, CBCOptions).toString(CryptoJS.enc.Utf8)
+export function decrypt(data, isJson = true) {
+  const res = CryptoJS.AES.decrypt(data, key, CBCOptions).toString(CryptoJS.enc.Utf8)
+  if (isJson) {
+    return JSON.parse(res)
+  }
+  return res
 }

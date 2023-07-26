@@ -12,7 +12,8 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/naruto': {
-        target: 'http://localhost:3001',
+        // target: 'http://localhost:3001',
+        target: 'http://localhost:80',
       }
     }
   },
